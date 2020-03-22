@@ -84,7 +84,8 @@ class MatrixView(ModelView):
 #### Tweety REST API
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
-def apitrn(base_code, subject):
+
+def tweety_bot(base_code, subject):
     session = db.session
     prj = session.query(Project).filter(Project.base_code==base_code).first()
     if prj is not None:
@@ -118,7 +119,7 @@ def apitrn(base_code, subject):
             else:
                 return 'Project Range Completed'
         else:
-            new_matrix = Matrix(code=item.project.base_code, prog=item.project.start_prog)
+            new_matrix = Matrix(code=prj.base_code, prog=prj.start_prog)
             new_matrix.created_by_fk = '1'
             new_matrix.changed_by_fk = '1'
             item.code = "-".join([prj.base_code, str(prj.start_prog).zfill(prj.prog_digits)])
