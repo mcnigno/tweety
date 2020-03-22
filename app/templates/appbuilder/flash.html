@@ -1,0 +1,18 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, m in messages %}
+            {% if category %}
+                <div class="alert alert-{{ category }}">
+            {% else %}
+                <div class="alert alert-info">
+            {% endif %}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% if category=='code' %}
+            <label id="lbtnx">TRANSMITTAL | {{ m }}</label><button class="btnx" data-clipboard-text="{{ m }}"><img id="btnx" src="/static/img/clippy.svg" alt="Copy to clipboard"></button>
+            {% else %}
+            <span id="fmsg">{{ m }}</span>
+            {% endif %} 
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

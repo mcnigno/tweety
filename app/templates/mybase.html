@@ -1,0 +1,15 @@
+{% extends 'appbuilder/baselayout.html' %}
+
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/tt.css')}}"></link>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="{{url_for('static',filename='js/clipboard.min.js')}}"></script>
+
+    <script src="{{url_for('static',filename='js/tt.js')}}"></script>
+
+{% endblock %}
+

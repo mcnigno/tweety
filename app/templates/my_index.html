@@ -1,0 +1,16 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <div class="container index">
+    <img id="tweety" alt="Tweety" class="center" src="{{url_for('static',filename='img/tweety3.png')}}"></img>
+    <h1>{{_("Tweety")}}</h1>
+    <h3>- TRANSMITTAL -</h3>
+    <p>{{_("( YET ANOTHER SEQUENCER )")}}</p>
+    <blockquote>
+        <p>{{param}}</p>
+    </blockquote>
+    <button onclick="window.location.href='/projectview/list/'" type="button" class="btn btn-primary btn-lg btn-block btn-index">ENTER</button>
+
+  </div>
+</div>
+{% endblock %}

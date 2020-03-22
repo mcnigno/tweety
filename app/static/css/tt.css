@@ -1,0 +1,77 @@
+.navbar-inverse {
+    background-color: rgb(43, 42, 42);
+    border-color: #000000;
+    border-radius: 0;
+}
+#tweety{
+    width: 35%;
+}
+
+blockquote ol:last-child, blockquote p:last-child, blockquote ul:last-child {
+    margin-bottom: 0;
+    background-color: #ffe051;
+}
+blockquote ol:last-child, blockquote p:last-child, blockquote ul:last-child {
+    margin-bottom: 0;
+    background-color: #fcdf53;
+}
+.jumbotron .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.panel-primary>.panel-heading {
+    color: #fff;
+    background-color: #c7211d !important;
+    border-color: #c7211d;
+}
+.panel-primary {
+    border-color: #c7211d;
+}
+.panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 0px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.btn-index {
+    color: #fff;
+    background-color: #7c5394;
+    border-color: #9263ad;
+    display: unset;
+    width: 20%;
+}
+a {
+    color: #c7211d;
+    text-decoration: none;
+}
+.select2-results .select2-highlighted {
+    background: #c7211d;
+    color: #fff;
+}
+.alert-code {
+    color: #ffffff;
+    background-color: #65a79d;
+    border-color: #b7dcb2;
+    text-align: center;
+    font-size: larger;
+}
+#btnx {
+    vertical-align: middle;
+    width: 14px;
+    -webkit-appearance: none !important;
+    border: 0px !important;
+}
+
+#lbtnx {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 400;
+    margin-right: 20px;
+}
