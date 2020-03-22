@@ -85,7 +85,7 @@ class MatrixView(ModelView):
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
 
-def tweety_bot(base_code, subject):
+def tweety_new(base_code, subject):
     session = db.session
     prj = session.query(Project).filter(Project.base_code==base_code).first()
     if prj is not None:
@@ -135,49 +135,19 @@ def tweety_bot(base_code, subject):
         return 'This project does not exist!' 
 
 
-import urllib.parse
 class TweetyApi(BaseApi):
 
-    #base_route = '/tweetyapi/v2/nice'
-
-    @expose('/greeting')
-    def greeting(self):
-        return self.response(200, message="Hello")
-
-    @expose('/greeting2', methods=['POST', 'GET'])
-    def greeting2(self):
-        if request.method == 'GET':
-            return self.response(200, message="Hello (GET)")
-        return self.response(201, message="Hello (POST)")
-
     ## http://localhost:5000/api/v1/tweetyapi/ask?q=(proj:BMP-TRA-TRA,subj:subject)
+    
     @expose('/ask', methods=['POST', 'GET'])
-    @rison()
-    @safe 
-    def greeting3(self, **kwargs):
-        if 'proj' and 'subj' in kwargs['rison']: 
-            
-            proj = kwargs['rison']['proj']
-            subj = kwargs['rison']['subj']  
-            
-            message = apitrn(proj,subj)
-            return self.response(
-                200,
-                #message="Hello {}".format(kwargs['rison']['name'])
-                transmittal=message 
-            )
-        return self.response_400(message="Please send your name")
-
-    # without rison
-    @expose('/ask2', methods=['POST', 'GET'])
     #@rison()
     @safe 
-    def get_transmittal(self, **kwargs): 
+    def ask_tweety(self, **kwargs): 
         proj = request.args.get('proj')
         subj = request.args.get('subj')
         print(proj,subj) 
         if proj and subj:     
-            message = apitrn(proj,subj)
+            message = tweety_new(proj,subj)
             return self.response(
                 200,
                 #message="Hello {}".format(kwargs['rison']['name'])
