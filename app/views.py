@@ -96,9 +96,8 @@ def is_allowed(user,proj):
 
 def tweety_new(user, base_code, subject):
     session = db.session
-    is_allowed = is_allowed(user,base_code)
         
-    if is_allowed:
+    if is_allowed(user,base_code):
         prj = session.query(Project).filter(Project.base_code==base_code).first()
         # Search for unlockef transmittal first
         unlocked = session.query(Transmittal).filter(
