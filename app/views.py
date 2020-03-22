@@ -98,6 +98,7 @@ def tweety_new(user, base_code, subject):
     session = db.session
         
     if is_allowed(user,base_code):
+        usr = session.query(Myuser).filter(Myuser.username==user).first()
         prj = session.query(Project).filter(Project.base_code==base_code).first()
         # Search for unlockef transmittal first
         unlocked = session.query(Transmittal).filter(
@@ -107,7 +108,7 @@ def tweety_new(user, base_code, subject):
         if unlocked is not None:
             unlocked.subject = subject
             unlocked.locked = True
-            unlocked.changed_by_fk = '1'
+            unlocked.changed_by_fk = usr.id
             session.commit()
             return unlocked.code
 
@@ -121,9 +122,9 @@ def tweety_new(user, base_code, subject):
                 item.code = "-".join([prj.base_code, str(matrix_code.prog).zfill(prj.prog_digits)]) 
                 item.project_id = prj.id
                 item.subject = subject
-                item.created_by_fk = '1'
-                item.changed_by_fk = '1'
-                matrix_code.changed_by_fk='1'
+                item.created_by_fk = usr.id
+                item.changed_by_fk = usr.id
+                matrix_code.changed_by_fk=usr.id
                 session.add(item) 
                 session.commit()
                 return item.code
@@ -131,13 +132,13 @@ def tweety_new(user, base_code, subject):
                 return 'Project Range Completed'
         else:
             new_matrix = Matrix(code=prj.base_code, prog=prj.start_prog)
-            new_matrix.created_by_fk = '1'
-            new_matrix.changed_by_fk = '1'
+            new_matrix.created_by_fk = usr.id
+            new_matrix.changed_by_fk = usr.id
             item.code = "-".join([prj.base_code, str(prj.start_prog).zfill(prj.prog_digits)])
             item.project_id = prj.id
             item.subject = subject
-            item.created_by_fk = '1'
-            item.changed_by_fk = '1'
+            item.created_by_fk = usr.id
+            item.changed_by_fk = usr.id
             session.add(new_matrix)
             session.add(item) 
             session.commit()
