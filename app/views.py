@@ -84,11 +84,22 @@ class MatrixView(ModelView):
 #### Tweety REST API
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
-
-def tweety_new(base_code, subject):
+#### Check if user is allowed
+def is_allowed(user,proj):
     session = db.session
-    prj = session.query(Project).filter(Project.base_code==base_code).first()
-    if prj is not None:
+    u = session.query(Myuser).filter(Myuser.username==user).first()
+    if u is not None:
+        projects = u.project
+        if proj in [x.base_code for x in projects]:
+            return True
+    return False
+
+def tweety_new(user, base_code, subject):
+    session = db.session
+    is_allowed = is_allowed(user,base_code)
+        
+    if is_allowed:
+        prj = session.query(Project).filter(Project.base_code==base_code).first()
         # Search for unlockef transmittal first
         unlocked = session.query(Transmittal).filter(
             Transmittal.project_id == prj.id,
@@ -132,7 +143,7 @@ def tweety_new(base_code, subject):
             session.commit()
             return item.code
     else:
-        return 'This project does not exist!' 
+        return 'You are not Allowed or this project does not exist!' 
 
 
 class TweetyApi(BaseApi):
@@ -142,12 +153,13 @@ class TweetyApi(BaseApi):
     @expose('/ask', methods=['POST', 'GET'])
     #@rison()
     @safe 
-    def ask_tweety(self, **kwargs): 
+    def ask_tweety(self, **kwargs):
+        user = request.args.get('user') 
         proj = request.args.get('proj')
         subj = request.args.get('subj')
         print(proj,subj) 
         if proj and subj:     
-            message = tweety_new(proj,subj)
+            message = tweety_new(user,proj,subj)
             return self.response(
                 200,
                 #message="Hello {}".format(kwargs['rison']['name'])
