@@ -107,6 +107,7 @@ def tweety_new(user, base_code, subject):
         if unlocked is not None:
             unlocked.subject = subject
             unlocked.locked = True
+            unlocked.changed_by_fk = '1'
             session.commit()
             return unlocked.code
 
