@@ -29,6 +29,7 @@ class TransmittalView(ModelView):
     base_order = ('id','desc')
 
     def pre_add(self,item):
+        print('PRE ADD TRASMITTAL FUNCTION *************')
         session = db.session
         
         # Search for unlockef transmittal first
@@ -118,13 +119,14 @@ def tweety_new(user, base_code, subject):
         if matrix_code is not None:
             if matrix_code.prog + 1 < prj.stop_prog:
                 matrix_code.prog += 1
+                matrix_code.changed_by_fk = usr.id
                 
                 item.code = "-".join([prj.base_code, str(matrix_code.prog).zfill(prj.prog_digits)]) 
                 item.project_id = prj.id
                 item.subject = subject
                 item.created_by_fk = usr.id
                 item.changed_by_fk = usr.id
-                matrix_code.changed_by_fk=usr.id
+                
                 session.add(item) 
                 session.commit()
                 return item.code
@@ -158,7 +160,7 @@ class TweetyApi(BaseApi):
         user = request.args.get('user') 
         proj = request.args.get('proj')
         subj = request.args.get('subj')
-        print(proj,subj) 
+        print('USER:', user,'PROJ:',proj,'SUB:',subj) 
         if proj and subj:     
             message = tweety_new(user,proj,subj)
             return self.response(
