@@ -32,6 +32,7 @@ class MyUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
+        'project',
         'extra',
         'password',
         'conf_password'
@@ -51,6 +52,6 @@ class MyUserDBModelView(UserDBModelView):
         'active',
         'email',
         'roles',
-        'extra',
-        'project'
+        'project',
+        'extra' 
     ]

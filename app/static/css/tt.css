@@ -75,3 +75,22 @@ a {
     font-weight: 400;
     margin-right: 20px;
 }
+
+FOOTER
+#qimg{
+    width: 30%;
+}
+#timg{
+    
+    width: 50%;
+}
+#rfoot{
+    text-align: right;
+}
+#rfoot{
+    text-align: right;
+}
+#cfoot{
+    text-align: center;
+    font-weight: 700;
+}

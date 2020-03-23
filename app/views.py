@@ -8,7 +8,7 @@ from flask import g
 from .sec_models import Myuser
 from flask import flash
 
-def get_user():
+def get_user(): 
     #session = db.session
     return g.user.id
 
