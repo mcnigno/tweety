@@ -118,14 +118,15 @@ def tweety_new(user, base_code, subject):
         item = Transmittal()
         if matrix_code is not None:
             if matrix_code.prog + 1 < prj.stop_prog:
+                user_id = str(usr.id)
+                prj_id = str(prj.id)
                 matrix_code.prog += 1
-                matrix_code.changed_by_fk = usr.id
-                
+                matrix_code.changed_by_fk = user_id
                 item.code = "-".join([prj.base_code, str(matrix_code.prog).zfill(prj.prog_digits)]) 
-                item.project_id = prj.id
+                item.project_id = prj_id
                 item.subject = subject
-                item.created_by_fk = usr.id
-                item.changed_by_fk = usr.id
+                item.created_by_fk = user_id
+                item.changed_by_fk = user_id
                 
                 session.add(item) 
                 session.commit()
@@ -134,13 +135,13 @@ def tweety_new(user, base_code, subject):
                 return 'Project Range Completed'
         else:
             new_matrix = Matrix(code=prj.base_code, prog=prj.start_prog)
-            new_matrix.created_by_fk = usr.id
-            new_matrix.changed_by_fk = usr.id
+            new_matrix.created_by_fk = user_id
+            new_matrix.changed_by_fk = user_id
             item.code = "-".join([prj.base_code, str(prj.start_prog).zfill(prj.prog_digits)])
-            item.project_id = prj.id
+            item.project_id = prj_id
             item.subject = subject
-            item.created_by_fk = usr.id
-            item.changed_by_fk = usr.id
+            item.created_by_fk = user_id
+            item.changed_by_fk = user_id
             session.add(new_matrix)
             session.add(item) 
             session.commit()
