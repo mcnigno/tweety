@@ -149,6 +149,10 @@ def tweety_new(user, base_code, subject):
     else:
         return 'You are not Allowed or this project does not exist!' 
 
+def projects():
+    session = db.session
+    return [(x.name,x.base_code) for x in session.query(Project)]
+
 
 class TweetyApi(BaseApi):
 
@@ -161,7 +165,13 @@ class TweetyApi(BaseApi):
         user = request.args.get('user') 
         proj = request.args.get('proj')
         subj = request.args.get('subj')
-        print('USER:', user,'PROJ:',proj,'SUB:',subj) 
+        #print('USER:', user,'PROJ:',proj,'SUB:',subj) 
+        if proj == 'list':
+            return self.response(
+                200,
+                #message="Hello {}".format(kwargs['rison']['name'])
+                projects=projects()
+            )
         if proj and subj:     
             message = tweety_new(user,proj,subj)
             return self.response(
