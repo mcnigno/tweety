@@ -4,6 +4,7 @@ from .sec import MySecurityManager
 from flask import Flask
 from flask_appbuilder import AppBuilder, SQLA
 from .index import MyIndexView
+from flask_mail import Mail
 """
  Logging configuration
 """
@@ -14,6 +15,8 @@ logging.getLogger().setLevel(logging.DEBUG)
 app = Flask(__name__)
 app.config.from_object("config")
 db = SQLA(app)
+mail = Mail(app)
+
 appbuilder = AppBuilder(app, db.session, 
             security_manager_class=MySecurityManager,
             indexview=MyIndexView,

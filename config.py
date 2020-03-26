@@ -108,3 +108,12 @@ IMG_UPLOAD_URL = "/static/uploads/"
 #APP_THEME = "spacelab.css"
 #APP_THEME = "united.css"
 #APP_THEME = "some.css"
+
+
+
+# Flask Mail Conf
+MAIL_SERVER='mail.quasarpm.com'
+MAIL_PORT=465
+MAIL_USE_SSL=True
+MAIL_USERNAME='tweety@quasarpm.com'
+MAIL_PASSWORD='300777Tweety'

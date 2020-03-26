@@ -86,6 +86,7 @@ class MatrixView(ModelView):
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
 #### Check if user is allowed
+'''
 def is_allowed(user,proj):
     session = db.session
     u = session.query(Myuser).filter(Myuser.username==user).first()
@@ -153,7 +154,8 @@ def projects():
     session = db.session
     return [(x.name,x.base_code) for x in session.query(Project)]
 
-
+'''
+from .helpers import projects, tweety_new
 class TweetyApi(BaseApi):
 
     ## http://localhost:5000/api/v1/tweetyapi/ask?q=(proj:BMP-TRA-TRA,subj:subject)
@@ -221,3 +223,6 @@ appbuilder.add_view(
 
 
 db.create_all()
+
+from tweety_mail import mail_scheduler
+mail_scheduler()
