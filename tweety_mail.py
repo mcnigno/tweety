@@ -49,17 +49,17 @@ def send_mail(recipients,title,body):
 def async_scheduler():
     while True:
         schedule.run_pending()
-        print('async -------- - --- -- --- - - - - - ---- - - - - - --- -- - --')
+        
         time.sleep(1)
         
 
 
 def mail_scheduler():
-    print('debug scheduler ***************** ************ ************* **************1')
+    
     schedule.every(15).seconds.do(tweety_mail)
-    print('debug scheduler ***************** ************ ************* **************2')
+    
     #schedule.logger.disabled = True
     #schedule.logger.error = True
     Thread(target=async_scheduler).start()
-    print('debug scheduler ***************** ************ ************* **************')
+    
 
