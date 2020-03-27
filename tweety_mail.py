@@ -55,7 +55,7 @@ def async_scheduler():
 
 def mail_scheduler():
     schedule.every(15).seconds.do(tweety_mail)
-    schedule.logger.disabled = True
-    schedule.logger.error = True
+    #schedule.logger.disabled = True
+    #schedule.logger.error = True
     Thread(target=async_scheduler).start()
 
