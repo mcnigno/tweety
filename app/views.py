@@ -18,6 +18,8 @@ def get_user():
 def get_prj():
     return [x.name for x in g.user.project]
 from flask import redirect
+from flask_appbuilder.fields import AJAXSelectField
+from flask_appbuilder.fieldwidgets import Select2AJAXWidget
 
 class TransmittalView(ModelView):
 
@@ -25,8 +27,18 @@ class TransmittalView(ModelView):
     list_columns = ['tweety_code','subject','date','created_by','locked']
     show_columns = ['code','date','created_by','subject','locked']
     edit_columns = ['code','date','created_by','subject','locked']
-    add_columns = ['project','date','subject']
+    add_columns = ['project','date','subject'] 
     base_order = ('id','desc')
+    #add_form_query_rel_fields = {'project':[['project']]} 
+    add_form_extra_fields = {
+        'project': AJAXSelectField(
+                            'project',
+                            description='This will show only the projects you are authorized for.',
+                            datamodel=datamodel,
+                            col_name='project',
+                            widget=Select2AJAXWidget(endpoint='/transmittalview/api/column/add/project')
+                         ), 
+    } 
 
     def pre_add(self,item):
         print('PRE ADD TRASMITTAL FUNCTION *************')
