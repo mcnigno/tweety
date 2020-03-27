@@ -61,5 +61,5 @@ def mail_scheduler():
     #schedule.logger.disabled = True
     #schedule.logger.error = True
     Thread(target=async_scheduler).start()
-    print('debug scheduler ***************** ************ ************* **************'3)
+    print('debug scheduler ***************** ************ ************* **************')
 
