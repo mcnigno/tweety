@@ -20,6 +20,7 @@ def get_prj():
 from flask import redirect
 from flask_appbuilder.fields import AJAXSelectField
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget
+from wtforms.validators import DataRequired   
 
 class TransmittalView(ModelView):
 
@@ -27,19 +28,11 @@ class TransmittalView(ModelView):
     list_columns = ['tweety_code','subject','date','created_by','locked']
     show_columns = ['code','date','created_by','subject','locked']
     edit_columns = ['code','date','created_by','subject','locked']
-    add_columns = ['project','date','subject'] 
+    add_columns = ['date','project','subject'] 
     base_order = ('id','desc')
-    #add_form_query_rel_fields = {'project':[['project']]} 
-    add_form_extra_fields = {
-        'project': AJAXSelectField(
-                            'project',
-                            description='This will show only the projects you are authorized for.',
-                            datamodel=datamodel,
-                            col_name='project',
-                            widget=Select2AJAXWidget(endpoint='/transmittalview/api/column/add/project')
-                         ), 
-    } 
-
+    add_form_query_rel_fields = {'project':[['name', FilterInFunction, get_prj]]}
+    
+    
     def pre_add(self,item):
         print('PRE ADD TRASMITTAL FUNCTION *************')
         session = db.session
@@ -98,75 +91,7 @@ class MatrixView(ModelView):
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
 #### Check if user is allowed
-'''
-def is_allowed(user,proj):
-    session = db.session
-    u = session.query(Myuser).filter(Myuser.username==user).first()
-    if u is not None:
-        projects = u.project
-        if proj in [x.base_code for x in projects]:
-            return True
-    return False
 
-def tweety_new(user, base_code, subject):
-    session = db.session
-        
-    if is_allowed(user,base_code):
-        usr = session.query(Myuser).filter(Myuser.username==user).first()
-        prj = session.query(Project).filter(Project.base_code==base_code).first()
-        # Search for unlockef transmittal first
-        unlocked = session.query(Transmittal).filter(
-            Transmittal.project_id == prj.id,
-            Transmittal.locked == False
-        ).first()
-        if unlocked is not None:
-            unlocked.subject = subject
-            unlocked.locked = True
-            unlocked.changed_by_fk = usr.id
-            session.commit()
-            return unlocked.code
-
-        # Generate new transmittal
-        matrix_code = session.query(Matrix).filter(Matrix.code == base_code).first()
-        item = Transmittal()
-        if matrix_code is not None:
-            if matrix_code.prog + 1 < prj.stop_prog:
-                user_id = str(usr.id)
-                prj_id = str(prj.id)
-                matrix_code.prog += 1
-                matrix_code.changed_by_fk = user_id
-                item.code = "-".join([prj.base_code, str(matrix_code.prog).zfill(prj.prog_digits)]) 
-                item.project_id = prj_id
-                item.subject = subject
-                item.created_by_fk = user_id
-                item.changed_by_fk = user_id
-                
-                session.add(item) 
-                session.commit()
-                return item.code
-            else:
-                return 'Project Range Completed'
-        else:
-            new_matrix = Matrix(code=prj.base_code, prog=prj.start_prog)
-            new_matrix.created_by_fk = user_id
-            new_matrix.changed_by_fk = user_id
-            item.code = "-".join([prj.base_code, str(prj.start_prog).zfill(prj.prog_digits)])
-            item.project_id = prj_id
-            item.subject = subject
-            item.created_by_fk = user_id
-            item.changed_by_fk = user_id
-            session.add(new_matrix)
-            session.add(item) 
-            session.commit()
-            return item.code
-    else:
-        return 'You are not Allowed or this project does not exist!' 
-
-def projects():
-    session = db.session
-    return [(x.name,x.base_code) for x in session.query(Project)]
-
-'''
 from .helpers import projects, tweety_new
 class TweetyApi(BaseApi):
 
@@ -211,18 +136,24 @@ def page_not_found(e):
 appbuilder.add_view(
         ProjectView,
         "Project List",
-        icon="fa-folder-open-o",
+        icon="fa-briefcase",
         category="System",
-        category_icon='fa-envelope'
+        category_icon='fa-cubes'
     )
+
+appbuilder.add_link('New','/transmittalview/add',
+        icon="fa-file-archive-o",
+        category="Transmittal",
+        category_icon='fa-folder')
 
 appbuilder.add_view(
         TransmittalView,
-        "Transmittal List",
+        "List",
         icon="fa-folder-open-o",
-        category="System",
-        category_icon='fa-envelope'
+        category="Transmittal",
+        category_icon='fa-folder'
     )
+
 
 appbuilder.add_view(
         MatrixView,

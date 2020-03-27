@@ -1,7 +1,10 @@
 {% extends "appbuilder/base.html" %}
 {% block content %}
-<div class="jumbotron">
+ 
+<div class="jumbotron" style="background-image: url({{url_for('static',filename='img/technip_bkg2.png')}});">
   <div class="container index">
+    <table>
+      <td>
     <img id="tweety" alt="Tweety" class="center" src="{{url_for('static',filename='img/tweety3.png')}}"></img>
     <h1>{{_("Tweety")}}</h1>
     <h3>- TRANSMITTAL -</h3>
@@ -10,7 +13,12 @@
         <p>{{param}}</p>
     </blockquote>
     <button onclick="window.location.href='/transmittalview/add'" type="button" class="btn btn-primary btn-lg btn-block btn-index">ENTER</button>
+    </td>
+    <td>
 
+    </td>
+    </table>
   </div>
 </div>
+
 {% endblock %}
