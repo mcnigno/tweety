@@ -1,12 +1,13 @@
 from flask import render_template
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder import ModelView
+from flask_appbuilder import ModelView, BaseView
 from .models import Project, Matrix, Transmittal
 from . import appbuilder, db
 from flask_appbuilder.models.sqla.filters import FilterContains, FilterRelationManyToManyEqual, FilterInFunction, FilterEqualFunction, FilterContains
 from flask import g
 from .sec_models import Myuser
 from flask import flash
+from flask_appbuilder import expose
 
 def get_user(): 
     #session = db.session
@@ -87,6 +88,12 @@ class MatrixView(ModelView):
     edit_columns = ['code','prog']
     add_columns = ['code','prog']
 
+class TweetyDashboardView(BaseView):
+    default_view = 'dash_dras'
+    @expose('/tweety_dash', methods=['POST', 'GET'])
+    def dash_dras(self):
+        return self.render_template('tweety_dash.html')
+
 #### Tweety REST API
 from flask_appbuilder.api import BaseApi, expose, rison, safe
 from flask import request
@@ -116,7 +123,7 @@ class TweetyApi(BaseApi):
             return self.response(
                 200,
                 #message="Hello {}".format(kwargs['rison']['name'])
-                transmittal=message 
+                transmittal=message  
             )
         return self.response_400(message="Please send the Project code base (es. BMP-V-TRA) and your Subject.")
 
@@ -137,6 +144,14 @@ appbuilder.add_view(
         ProjectView,
         "Project List",
         icon="fa-briefcase",
+        category="System",
+        category_icon='fa-cubes'
+    )
+
+appbuilder.add_view(
+        TweetyDashboardView,
+        "Dashboard",
+        icon="fa-tachometer",
         category="System",
         category_icon='fa-cubes'
     )
