@@ -14,22 +14,26 @@ mailbox = "inbox"
 
 
 def tweety_mail():
-    imapper = easyimap.connect(host, user, password, mailbox)
-    unseen = imapper.unseen()
-    if unseen is not None:
-        for newmail in unseen:
-            try:
-                basecode = newmail.title.split(' ')[0]
-                tr_subject = newmail.title.split(' ')[1]
-            except:
-                basecode = 'undefined'
-                tr_subject = 'undefined'
-            send_mail(
-                recipients=newmail.from_addr,
-                title = newmail.title,
-                body = tweety_new(find_user_by_mail(newmail.from_addr),
-                                basecode, tr_subject))
-    imapper.quit()
+    try:
+        imapper = easyimap.connect(host, user, password, mailbox)
+        unseen = imapper.unseen()
+        if unseen is not None:
+            for newmail in unseen:
+                try:
+                    basecode = newmail.title.split(' ')[0]
+                    tr_subject = newmail.title.split(' ')[1]
+                except:
+                    basecode = 'undefined'
+                    tr_subject = 'undefined'
+                send_mail(
+                    recipients=newmail.from_addr,
+                    title = newmail.title,
+                    body = tweety_new(find_user_by_mail(newmail.from_addr),
+                                    basecode, tr_subject))
+        imapper.quit()
+    except:
+        print('Tweety Mail Fail')
+    
             
 
 def send_async_email(app, msg):
@@ -49,7 +53,6 @@ def send_mail(recipients,title,body):
 def async_scheduler():
     while True:
         schedule.run_pending()
-        
         time.sleep(1)
         
 
@@ -57,6 +60,7 @@ def async_scheduler():
 def mail_scheduler():
     
     schedule.every(15).seconds.do(tweety_mail)
+    print('event scheduled')
     
     #schedule.logger.disabled = True
     #schedule.logger.error = True
