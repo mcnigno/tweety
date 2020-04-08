@@ -24,8 +24,8 @@ CSRF_ENABLED = True
 # GLOBALS FOR APP Builder
 # ------------------------------
 # Uncomment to setup Your App name
-#APP_NAME = "Tweety"
-
+APP_NAME = "Tweety"
+  
 # Uncomment to setup Setup an App icon
 APP_ICON = "/static/img/tweety_logo.png"
 
