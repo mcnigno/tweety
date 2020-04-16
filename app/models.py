@@ -54,6 +54,7 @@ class Transmittal(Model,AuditMixin):
     code = Column(String(150), unique = True, nullable=False)
     subject = Column(String(255), nullable=False)
     locked = Column(Boolean, default=True)
+    quantity = Column(Integer, default=1, nullable=False)
 
     def __repr__(self):
         return self.code

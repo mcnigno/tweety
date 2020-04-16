@@ -11,7 +11,7 @@ from flask_appbuilder import expose
 
 def get_user(): 
     #session = db.session
-    return g.user.id
+    return g.user
 
 """
     Application wide 404 error handler
@@ -22,50 +22,63 @@ from flask import redirect
 from flask_appbuilder.fields import AJAXSelectField
 from flask_appbuilder.fieldwidgets import Select2AJAXWidget
 from wtforms.validators import DataRequired   
+from flask import abort, Response
 
 class TransmittalView(ModelView):
 
     datamodel = SQLAInterface(Transmittal)
     list_columns = ['tweety_code','subject','date','created_by','locked']
     show_columns = ['code','date','created_by','subject','locked']
-    edit_columns = ['code','date','created_by','subject','locked']
-    add_columns = ['date','project','subject'] 
+    edit_columns = ['code','date','subject','locked']
+    add_columns = ['date','project','quantity'] 
     base_order = ('id','desc')
     add_form_query_rel_fields = {'project':[['name', FilterInFunction, get_prj]]}
+    base_filters = [['created_by', FilterEqualFunction, get_user]]
     
     
     def pre_add(self,item):
         print('PRE ADD TRASMITTAL FUNCTION *************')
         session = db.session
         
-        # Search for unlockef transmittal first
-        unlocked = session.query(Transmittal).filter(
+        
+        # Generate new transmittal
+        for i in range(item.quantity):
+            # Search for unlockef transmittal first
+            unlocked = session.query(Transmittal).filter(
             Transmittal.project_id == item.project.id,
             Transmittal.locked == False
-        ).first()
-        if unlocked is not None:
-            unlocked.subject = item.subject
-            unlocked.locked = True
-            session.commit()
-            flash(unlocked.code, category='code')
-            raise Exception('Unlocked Transmittal Available | Created by ' + str(unlocked.created_by) + ' on '+ str(unlocked.created_on))  
-
-        # Generate new transmittal
-        matrix_code = session.query(Matrix).filter(Matrix.code == item.project.base_code).first()
-        if matrix_code is not None:
-            if matrix_code.prog + 1 < item.project.stop_prog:
-                matrix_code.prog += 1
-                item.code = "-".join([item.project.base_code, str(matrix_code.prog).zfill(item.project.prog_digits)])
+            ).first()
+            if unlocked is not None:
+                unlocked.subject = 'Pending'
+                unlocked.locked = True
                 session.commit()
+                flash('Unlocked Transmittal Available | Created by ' + str(unlocked.created_by) + ' on '+ str(unlocked.created_on), category='info')
+                flash(unlocked.code, category='code')
+                  
+                continue
+            #session = db.session
+            matrix_code = session.query(Matrix).filter(Matrix.code == item.project.base_code).first()
+            new_t = Transmittal()
+            new_t.subject = "Pending"
+            new_t.project = item.project
+            new_t.created_by_fk = item.created_by_fk
+            if matrix_code is not None:
+                if matrix_code.prog + 1 < item.project.stop_prog:
+                    matrix_code.prog += 1
+                    new_t.code = "-".join([item.project.base_code, str(matrix_code.prog).zfill(item.project.prog_digits)])
+                    #session.commit()
+                else:
+                    return flash('Project Range Completed', category='warning')
             else:
-                return flash('Project Range Completed', category='warning')
-        else:
-            new_matrix = Matrix(code=item.project.base_code, prog=item.project.start_prog)
-            item.code = "-".join([item.project.base_code, str(item.project.start_prog).zfill(item.project.prog_digits)])
-            session.add(new_matrix)
+                new_matrix = Matrix(code=item.project.base_code, prog=item.project.start_prog)
+                new_t.code = "-".join([item.project.base_code, str(item.project.start_prog).zfill(item.project.prog_digits)])
+                session.add(new_matrix)
+            
+            session.add(new_t)
+            flash(new_t.code, category='code') 
             session.commit()
-        flash(item.code, category='code')
-      
+        raise Exception('All Codes Released and Locked')    
+          
 
 class ProjectView(ModelView):
     datamodel = SQLAInterface(Project)
